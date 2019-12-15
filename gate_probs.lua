@@ -2,8 +2,6 @@
 -- in1: clock input
 -- out1-4: 100% 75% 50% 25%
 
--- private vars
-count = {1, 1, 1, 1}
 function init()
   input[1].mode("change")
   input[2].mode("none")
