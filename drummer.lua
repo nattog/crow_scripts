@@ -51,11 +51,16 @@ function step()
             end
         end
     end
+
+    -- increments counter
     counter = counter + 1
+
     if #queued > 0 then
+        -- countdown wait if queue has elements
         if wait > 0 then
             wait = wait - 1
         else 
+            -- can set the queue
             seq = queued
             wait = 0
             queued = {}
@@ -65,12 +70,14 @@ function step()
 end
 
 function set(idx, val)
+    -- sets all tracks to same val
     if idx == "*" then
         for i = 1, #seq do
             seq[i] = #val > 0 and val or ''
         end
     end
         
+    -- only set sequences for valid output indexes
     if idx < 5 and idx > 0 then
         seq[idx] = #val > 0 and val or ''
     end
@@ -94,9 +101,13 @@ function progress(tab, period)
         print('no input')
         return
     end
+    -- if input is empty table, set all channels to empty strings
     local new_seq = #tab < 1 and {"", "", "", ""} or tab
+
+    -- if running then a wait period is necessary
     if pause == false then
         wait_period = progress_on % counter 
+        -- add seq to queue
         if wait_period ~= 0 then
             queued = new_seq
             wait = wait_period
@@ -104,6 +115,7 @@ function progress(tab, period)
             seq = new_seq
         end
     else 
+        -- update seq
         seq = new_seq
         reset()
     end
