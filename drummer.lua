@@ -13,6 +13,9 @@ counter = 0 -- used to get index by modulo of seq items
 seq = {"", "", "", ""}
 pause = false
 preset = {'x---', '----x---', '--x-', 'xx--x--'}
+preset1 = {"----x---", "x-------", "x-x-x-x-", "x-x--"}
+preset2 = {'x-x-x-', 'x', 'xxxx', 'x------'}
+preset3 = {'x-x-x-', 'x-x-xx', 'xxxx', 'x------'}
 queued = {}
 wait = 0
 
@@ -71,20 +74,19 @@ end
 
 function set(idx, val)
     -- sets all tracks to same val
+    local to_print = ''
     if idx == "*" then
         for i = 1, #seq do
             seq[i] = #val > 0 and val or ''
+            to_print = 'SET ALL TO ' .. string.upper(seq[1])
         end
-    end
-        
     -- only set sequences for valid output indexes
-    if idx < 5 and idx > 0 then
+    elseif idx < 5 and idx > 0 then
         seq[idx] = #val > 0 and val or ''
+        to_print = 'SET ' .. idx .. ' TO ' .. string.upper(seq[idx]);
     end
 
-    print('\n')
-    print('SET ' .. idx .. ' TO ' .. string.upper(seq[idx]))
-    print('\n')
+    print('\n' .. to_print .. '\n')
 end
 
 function stop()
@@ -102,7 +104,7 @@ function progress(tab, period)
         return
     end
     -- if input is empty table, set all channels to empty strings
-    local new_seq = #tab < 1 and {"", "", "", ""} or tab
+    local new_seq = #tab < 1 and {"", "", "", ""} or table.shallow_copy(tab)
 
     -- if running then a wait period is necessary
     if pause == false then
@@ -119,4 +121,12 @@ function progress(tab, period)
         seq = new_seq
         reset()
     end
+end
+
+function table.shallow_copy(t)
+    local t2 = {}
+    for k,v in pairs(t) do
+      t2[k] = v
+    end
+    return t2
 end
