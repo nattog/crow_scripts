@@ -1,29 +1,13 @@
 -- plays wsyn
 
 ws = ""
-lydian = {0, 2, 4, 5, 6, 7, 9, 11}
-penta = {0, 2, 4, 7, 9}
-penta2 = {2, 4, 6, 9, 11}
-scale_ix = 1
-scale = penta2
-level = 3
-counter = 0
-prob = 0.5
-
-shifts = {0}
-shifts_ix = 1
-running_items = {}
 
 function init()
     output[1].mode = pulse()
-    metro[1].event = n
-    metro[1].time = 1
-    metro[1]:start()
     metro[2].event = function()
-        output[1]()
-        sync()
+        increment_every(0.2, 0.3)
     end
-    metro[2].time = 0.33
+    metro[2].time = 2
     metro[2]:start()
     ws = ii.wsyn
     ws.ar_mode(1)
@@ -31,14 +15,31 @@ end
 
 function sync()
     counter = counter + 1
-    looping(counter)
+    looping(counter, 16)
     n()
     running()
 end
 
-function looping(counter)
-    if counter % 16 == 0 then
-        shifts_ix = (shifts_ix + 1) % #shifts + 1
+
+incr1 = 0.6
+incr2 = 0.1
+function increment_every(val1, val2)
+    incr1 = incr1 + val1
+    incr2 = incr2 + val2
+    if incr1 > 8 then 
+        incr1 = 1
+    end
+
+    if incr2 > 4 then
+        incr2 = 1
+    end
+    ws.fm_ratio(incr1, incr2)
+end
+
+function looping(counter, len)
+    if counter % len == 0 then
+        
+        -- shifts_ix = (shifts_ix + 1) % #shifts + 1
     end
 end
 
